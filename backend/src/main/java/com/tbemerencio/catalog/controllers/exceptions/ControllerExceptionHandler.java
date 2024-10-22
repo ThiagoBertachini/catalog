@@ -1,7 +1,6 @@
 package com.tbemerencio.catalog.controllers.exceptions;
 
-import com.tbemerencio.catalog.services.exceptions.EntityNotFoundException;
-import org.apache.coyote.Response;
+import com.tbemerencio.catalog.services.exceptions.CategoryNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,8 +14,8 @@ public class ControllerExceptionHandler {
 
     private final int NOT_FOUND = HttpStatus.NOT_FOUND.value();
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<DefaultException> entityNotFound(EntityNotFoundException error,
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<DefaultException> entityNotFound(CategoryNotFoundException error,
                                                            HttpServletRequest request){
         DefaultException exceptionResponse = new DefaultException();
         exceptionResponse.setTimestamp(Instant.now());

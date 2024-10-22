@@ -3,12 +3,12 @@ package com.tbemerencio.catalog.services;
 import com.tbemerencio.catalog.controllers.dtos.CategoryDTO;
 import com.tbemerencio.catalog.entities.Category;
 import com.tbemerencio.catalog.repositories.CategoryRepository;
-import com.tbemerencio.catalog.services.exceptions.EntityNotFoundException;
+import com.tbemerencio.catalog.services.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDTO> findAll(){
+    public List<CategoryDTO> findAll() {
         return categoryRepository.findAll().stream()
                 .map(CategoryDTO::new).collect(Collectors.toList());
     }
@@ -29,12 +29,23 @@ public class CategoryService {
     public CategoryDTO findByID(Long id) {
         Optional<Category> entityOPT = categoryRepository.findById(id);
         Category entity = entityOPT.orElseThrow(() ->
-                new EntityNotFoundException("ID not found [" + id + "]"));
+                new CategoryNotFoundException("ID not found [" + id + "]"));
         return new CategoryDTO(entity);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CategoryDTO create(CategoryDTO categoryDTO) {
         return new CategoryDTO(categoryRepository.save(new Category(categoryDTO)));
+    }
+
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO categoyRequestDTO) {
+        try {
+            Category categoryEntityDTO = categoryRepository.getOne(id);
+            categoryEntityDTO.setName(categoyRequestDTO.getName());
+            return new CategoryDTO(categoryRepository.save(categoryEntityDTO));
+        } catch (EntityNotFoundException e) {
+            throw new CategoryNotFoundException("ID not found " + id);
+        }
     }
 }

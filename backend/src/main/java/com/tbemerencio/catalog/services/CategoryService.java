@@ -4,7 +4,10 @@ import com.tbemerencio.catalog.controllers.dtos.CategoryDTO;
 import com.tbemerencio.catalog.entities.Category;
 import com.tbemerencio.catalog.repositories.CategoryRepository;
 import com.tbemerencio.catalog.services.exceptions.CategoryNotFoundException;
+import com.tbemerencio.catalog.services.exceptions.DataBaseIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +49,16 @@ public class CategoryService {
             return new CategoryDTO(categoryRepository.save(categoryEntityDTO));
         } catch (EntityNotFoundException e) {
             throw new CategoryNotFoundException("ID not found " + id);
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            categoryRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CategoryNotFoundException("ID not found " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseIntegrityException("Deletion of related items not allowed");
         }
     }
 }

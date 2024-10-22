@@ -7,6 +7,7 @@ import com.tbemerencio.catalog.services.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +31,10 @@ public class CategoryService {
         Category entity = entityOPT.orElseThrow(() ->
                 new EntityNotFoundException("ID not found [" + id + "]"));
         return new CategoryDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryDTO create(CategoryDTO categoryDTO) {
+        return new CategoryDTO(categoryRepository.save(new Category(categoryDTO)));
     }
 }

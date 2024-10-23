@@ -1,3 +1,13 @@
 INSERT INTO tb_category(name, created_At) VALUES ('Books', NOW());
 INSERT INTO tb_category(name, created_At) VALUES ('Electronics', NOW());
 INSERT INTO tb_category(name, created_At) VALUES ('Computers', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new1', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new2', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new3', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new4', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new5', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new6', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new7', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new8', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new9', NOW());
+INSERT INTO tb_category(name, created_At) VALUES ('new10', NOW());

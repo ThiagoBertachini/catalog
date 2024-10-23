@@ -1,7 +1,7 @@
 package com.tbemerencio.catalog.controllers.exceptions;
 
-import com.tbemerencio.catalog.services.exceptions.CategoryNotFoundException;
 import com.tbemerencio.catalog.services.exceptions.DataBaseIntegrityException;
+import com.tbemerencio.catalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,8 +16,8 @@ public class ControllerExceptionHandler {
     private final int NOT_FOUND = HttpStatus.NOT_FOUND.value();
     private final int UNPROCESSABLE_ENTITY = HttpStatus.UNPROCESSABLE_ENTITY.value();
 
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<DefaultException> entityNotFound(CategoryNotFoundException error,
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<DefaultException> entityNotFound(ResourceNotFoundException error,
                                                            HttpServletRequest request){
         DefaultException exceptionResponse = new DefaultException();
         exceptionResponse.setTimestamp(Instant.now());

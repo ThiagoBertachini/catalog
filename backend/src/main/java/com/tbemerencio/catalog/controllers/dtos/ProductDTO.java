@@ -1,42 +1,30 @@
-package com.tbemerencio.catalog.entities;
+package com.tbemerencio.catalog.controllers.dtos;
 
-import com.tbemerencio.catalog.controllers.dtos.ProductDTO;
+import com.tbemerencio.catalog.entities.Category;
+import com.tbemerencio.catalog.entities.Product;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "tb_product")
-public class Product implements Serializable {
+public class ProductDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
     private String imgUrl;
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant date;
+    private List<CategoryDTO> categories = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_product_category",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> categories = new HashSet<>();
-
-    public Product() {
+    public ProductDTO() {
     }
 
-    public Product(Long id, String name, String description,
-                   Double price, String imgUrl, Instant date) {
+    public ProductDTO(Long id, String name, String description,
+                      Double price, String imgUrl, Instant date) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,12 +33,22 @@ public class Product implements Serializable {
         this.date = date;
     }
 
-    public Product(ProductDTO productDTO) {
-        name = productDTO.getName();
-        description = productDTO.getDescription();
-        price = productDTO.getPrice();
-        imgUrl = productDTO.getImgUrl();
-        date = productDTO.getDate();
+    public ProductDTO(Product entity) {
+        id = entity.getId();
+        name = entity.getName();
+        description = entity.getDescription();
+        price = entity.getPrice();
+        imgUrl = entity.getImgUrl();
+        date = entity.getDate();
+    }
+
+    public ProductDTO(Product entity, Set<Category> categories) {
+        this(entity);
+        this.categories = categories.stream().map(CategoryDTO::new).collect(Collectors.toList());
+    }
+
+    public ProductDTO(CategoryDTO categoryDTO) {
+        this.name = categoryDTO.getName();
     }
 
     public Long getId() {
@@ -101,15 +99,19 @@ public class Product implements Serializable {
         this.date = date;
     }
 
-    public Set<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return categories;
+    }
+
+    public void setCategories(List<CategoryDTO> categories) {
+        this.categories = categories;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
+        ProductDTO product = (ProductDTO) o;
         return Objects.equals(id, product.id);
     }
 

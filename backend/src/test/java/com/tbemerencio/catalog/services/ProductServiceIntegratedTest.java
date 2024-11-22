@@ -2,29 +2,19 @@ package com.tbemerencio.catalog.services;
 
 import com.tbemerencio.Factory;
 import com.tbemerencio.catalog.controllers.dtos.ProductDTO;
-import com.tbemerencio.catalog.entities.Category;
 import com.tbemerencio.catalog.entities.Product;
-import com.tbemerencio.catalog.repositories.CategoryRepository;
 import com.tbemerencio.catalog.repositories.ProductRepository;
-import com.tbemerencio.catalog.services.exceptions.DataBaseIntegrityException;
 import com.tbemerencio.catalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional

@@ -4,6 +4,7 @@ import com.tbemerencio.catalog.services.exceptions.DataBaseIntegrityException;
 import com.tbemerencio.catalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -29,12 +30,26 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(DataBaseIntegrityException.class)
-    public ResponseEntity<DefaultException> entityNotFound(DataBaseIntegrityException error,
+    public ResponseEntity<DefaultException> deletionException(DataBaseIntegrityException error,
                                                            HttpServletRequest request){
         DefaultException exceptionResponse = new DefaultException();
         exceptionResponse.setTimestamp(Instant.now());
         exceptionResponse.setMessage(error.getMessage());
         exceptionResponse.setError("Deletion not allowed");
+        exceptionResponse.setPath(request.getRequestURI());
+        exceptionResponse.setStatus(UNPROCESSABLE_ENTITY);
+        return ResponseEntity.status(UNPROCESSABLE_ENTITY).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<DefaultException> validationException(MethodArgumentNotValidException error,
+                                                           HttpServletRequest request){
+        ValidationException exceptionResponse = new ValidationException();
+        error.getBindingResult().getFieldErrors().forEach(
+                err -> exceptionResponse.addError(err.getField(), err.getDefaultMessage()));
+        exceptionResponse.setTimestamp(Instant.now());
+        exceptionResponse.setMessage(error.getMessage());
+        exceptionResponse.setError("Validation error");
         exceptionResponse.setPath(request.getRequestURI());
         exceptionResponse.setStatus(UNPROCESSABLE_ENTITY);
         return ResponseEntity.status(UNPROCESSABLE_ENTITY).body(exceptionResponse);

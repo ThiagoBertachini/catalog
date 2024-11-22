@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserDTO> create(@RequestBody @Valid UserRequestDTO userRequestDTO) {
         UserDTO userDTO = userService.create(userRequestDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(userDTO.getId()).toUri();
@@ -39,7 +40,7 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id,
-                                             @RequestBody UserRequestDTO userRequestDTO) {
+                                             @RequestBody @Valid UserRequestDTO userRequestDTO) {
         return ResponseEntity.ok(userService.update(id, userRequestDTO));
     }
 

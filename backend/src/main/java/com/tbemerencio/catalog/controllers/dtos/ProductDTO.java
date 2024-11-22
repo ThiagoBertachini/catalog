@@ -3,6 +3,7 @@ package com.tbemerencio.catalog.controllers.dtos;
 import com.tbemerencio.catalog.entities.Category;
 import com.tbemerencio.catalog.entities.Product;
 
+import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,15 @@ import java.util.stream.Collectors;
 public class ProductDTO {
 
     private Long id;
+    @NotBlank(message = "name required")
+    @Size(min = 2, max = 100, message = "name between 5 and 100")
     private String name;
+    @NotBlank(message = "description required")
     private String description;
+    @Positive(message = "price value must be positive")
     private Double price;
     private String imgUrl;
+    @PastOrPresent(message = "Valid date is present or past")
     private Instant date;
     private List<CategoryDTO> categories = new ArrayList<>();
 

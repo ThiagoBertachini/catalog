@@ -3,15 +3,21 @@ package com.tbemerencio.catalog.controllers.dtos;
 import com.tbemerencio.catalog.entities.User;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserDTO {
     private Long id;
+    @NotBlank(message = "firstName required")
     private String firstName;
+    @NotBlank(message = "lastName required")
     private String lastName;
     @Column(unique = true)
+    @Email(message = "Not valid email")
     private String email;
     private Set<RoleDTO> roles = new HashSet<>();
 

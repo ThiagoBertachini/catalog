@@ -1,5 +1,8 @@
 package com.tbemerencio.catalog.controllers.dtos;
 
+import com.tbemerencio.catalog.services.UserRequestValid;
+
+@UserRequestValid
 public class UserRequestDTO extends UserDTO{
     private String password;
 

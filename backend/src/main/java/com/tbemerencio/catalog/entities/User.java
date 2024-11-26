@@ -1,5 +1,7 @@
 package com.tbemerencio.catalog.entities;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -14,6 +16,7 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
     private String password;
 

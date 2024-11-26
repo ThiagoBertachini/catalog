@@ -2,6 +2,7 @@ package com.tbemerencio.catalog.controllers;
 
 import com.tbemerencio.catalog.controllers.dtos.UserDTO;
 import com.tbemerencio.catalog.controllers.dtos.UserRequestDTO;
+import com.tbemerencio.catalog.services.UserRequestValid;
 import com.tbemerencio.catalog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

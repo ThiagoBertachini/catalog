@@ -1,6 +1,7 @@
 package com.tbemerencio.catalog.controllers.dtos;
 
 import com.tbemerencio.catalog.entities.User;
+import com.tbemerencio.catalog.services.UserRequestValid;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;

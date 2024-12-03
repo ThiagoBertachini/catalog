@@ -1,12 +1,10 @@
 package com.tbemerencio.catalog.controllers.dtos;
 
 import com.tbemerencio.catalog.entities.User;
-import com.tbemerencio.catalog.services.UserRequestValid;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

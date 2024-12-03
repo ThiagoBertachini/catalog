@@ -2,6 +2,7 @@ package com.tbemerencio.catalog.services;
 
 import com.tbemerencio.catalog.controllers.dtos.UserDTO;
 import com.tbemerencio.catalog.controllers.dtos.UserRequestDTO;
+import com.tbemerencio.catalog.controllers.dtos.UserUpdateDTO;
 import com.tbemerencio.catalog.entities.Role;
 import com.tbemerencio.catalog.entities.User;
 import com.tbemerencio.catalog.repositories.RoleRepository;
@@ -50,15 +51,15 @@ public class UserService {
     @Transactional
     public UserDTO create(UserRequestDTO userDTO) {
         User entity = new User();
-        entity = userRepository.save(userDTOToUser(userDTO, entity));
+        entity = userRepository.save(userRequestDTOToUser(userDTO, entity));
         return new UserDTO(entity);
     }
 
     @Transactional
-    public UserDTO update(Long id, UserRequestDTO userRequestDTO) {
+    public UserDTO update(Long id, UserUpdateDTO userUpdateDTO) {
         try {
             User userEntity = userRepository.getOne(id);
-            return new UserDTO(userRepository.save(userDTOToUser(userRequestDTO, userEntity)));
+            return new UserDTO(userRepository.save(userUpdateDTOToUser(userUpdateDTO, userEntity)));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("ID not found " + id);
         }
@@ -74,7 +75,7 @@ public class UserService {
         }
     }
 
-    private User userDTOToUser(UserRequestDTO userRequestDTO, User entity) {
+    private User userRequestDTOToUser(UserRequestDTO userRequestDTO, User entity) {
         entity.setFirstName(userRequestDTO.getFirstName());
         entity.setLastName(userRequestDTO.getLastName());
         entity.setEmail(userRequestDTO.getEmail());
@@ -85,6 +86,23 @@ public class UserService {
             entity.getRoles().clear();
 
             userRequestDTO.getRoles().forEach(roleDTO -> {
+                Role role = roleRepository.findById(roleDTO.getId()).orElseThrow(
+                        () -> new ResourceNotFoundException("Role doesen't exists -> " + roleDTO.getId()));
+                entity.getRoles().add(role);
+            });
+        }
+        return entity;
+    }
+
+    private User userUpdateDTOToUser(UserUpdateDTO userUpdateDTO, User entity) {
+        entity.setFirstName(userUpdateDTO.getFirstName());
+        entity.setLastName(userUpdateDTO.getLastName());
+        entity.setEmail(userUpdateDTO.getEmail());
+
+        if (!CollectionUtils.isEmpty(userUpdateDTO.getRoles())) {
+            entity.getRoles().clear();
+
+            userUpdateDTO.getRoles().forEach(roleDTO -> {
                 Role role = roleRepository.findById(roleDTO.getId()).orElseThrow(
                         () -> new ResourceNotFoundException("Role doesen't exists -> " + roleDTO.getId()));
                 entity.getRoles().add(role);

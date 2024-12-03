@@ -2,6 +2,7 @@ package com.tbemerencio.catalog.controllers;
 
 import com.tbemerencio.catalog.controllers.dtos.UserDTO;
 import com.tbemerencio.catalog.controllers.dtos.UserRequestDTO;
+import com.tbemerencio.catalog.controllers.dtos.UserUpdateDTO;
 import com.tbemerencio.catalog.services.UserRequestValid;
 import com.tbemerencio.catalog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id,
-                                             @RequestBody @Valid UserRequestDTO userRequestDTO) {
-        return ResponseEntity.ok(userService.update(id, userRequestDTO));
+                                             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.ok(userService.update(id, userUpdateDTO));
     }
 
     @DeleteMapping(value = "/delete/{id}")

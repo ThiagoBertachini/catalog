@@ -9,11 +9,16 @@ import com.tbemerencio.catalog.repositories.RoleRepository;
 import com.tbemerencio.catalog.repositories.UserRepository;
 import com.tbemerencio.catalog.services.exceptions.DataBaseIntegrityException;
 import com.tbemerencio.catalog.services.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +26,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -109,5 +117,15 @@ public class UserService {
             });
         }
         return entity;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);;
+        if (Objects.isNull(user)) {
+            logger.error("Authentication error, user not found");
+            throw new UsernameNotFoundException("User not found");
+        } logger.info("Success, user found");
+        return user;
     }
 }

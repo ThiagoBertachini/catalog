@@ -28,8 +28,10 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(Pageable pageable) {
-        return productRepository.findAll(pageable).map(ProductDTO::new);
+    public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
+        Category category = (categoryId == 0) ? null : categoryRepository.getOne(categoryId);
+        return productRepository.findProduct(category, name.trim() /*aparar espaçoes esq/dir*/,
+                pageable).map(ProductDTO::new);
     }
 
     @Transactional(readOnly = true)

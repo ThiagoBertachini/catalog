@@ -29,10 +29,12 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
-        return productRepository.findProduct(
+        Page<Product> productPage = productRepository.findProduct(
                 (categoryId == 0) ? null : categoryId,
                 name.trim() /*aparar espaçoes esq/dir*/,
-                pageable).map(ProductDTO::new);
+                pageable);
+        productRepository.findProductWithCategory(productPage.getContent()); // Busca categorias :N e salva em memória sem gerar N+1
+        return productPage.map(p -> new ProductDTO(p, p.getCategories()));
     }
 
     @Transactional(readOnly = true)

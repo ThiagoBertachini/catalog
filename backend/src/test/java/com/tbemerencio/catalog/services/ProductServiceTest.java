@@ -56,6 +56,8 @@ class ProductServiceTest {
         when(productRepository.save(any())).thenReturn(product);
         when(productRepository.findById(validId)).thenReturn(Optional.of(product));
         when(productRepository.findById(notValidId)).thenReturn(Optional.empty());
+
+        when(productRepository.findProduct(any(), any(), any())).thenReturn(pageProduct);
     }
 
     @Test
@@ -104,7 +106,7 @@ class ProductServiceTest {
 
     @Test
     void findAllShoudReturPageOfProduct(){
-        Page<ProductDTO> productPage = productService.findAllPaged((Pageable) any());
+        Page<ProductDTO> productPage = productService.findAllPaged(0L, "test", Pageable.ofSize(1));
 
         assertFalse(productPage.isEmpty());
     }

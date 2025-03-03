@@ -2,6 +2,7 @@ package com.tbemerencio.catalog.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tbemerencio.Factory;
+import com.tbemerencio.catalog.TokenUtil;
 import com.tbemerencio.catalog.controllers.dtos.ProductDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,9 +32,11 @@ class ProductControllerIntegratedTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private ProductDTO productDTO;
     private final String uri = "/api/products";
-    private final String paged = "?page=0&size=12&sort=name,asc";
 
     @BeforeEach
     void setUp() {
@@ -47,6 +49,7 @@ class ProductControllerIntegratedTest {
         //        mockMvc.perform(get("/api/products"));
         //resultActions.andExpect(status().isOk());
 
+        String paged = "?page=0&size=12&sort=name,asc";
         ResultActions result = mockMvc.perform(
                 get(uri + paged).accept(MediaType.APPLICATION_JSON));
 
@@ -60,9 +63,14 @@ class ProductControllerIntegratedTest {
     void updateShouldReturnSuccessWhenValidId() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
 
+        String userName = "maria@gmail.com";
+        String password = "123456";
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, userName, password);
+
         Long validId = 1L;
         mockMvc.perform(
                 put(uri + "/update/{id}", validId)
+                        .header("Authorization", "Bearer " + accessToken)
                         .content(jsonBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

@@ -15,7 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT DISTINCT p FROM Product p " + // Tabele N:N podem ter repetições, usar DISTINCT
             "INNER JOIN p.categories c " +
-            "WHERE (:category IS NULL OR :category IN c) " +// consulta N:N INNER JOIN/IN se a categoria for null ou existir na lista
+            "WHERE (:categoryId IS NULL OR :categoryId IN c) " +// consulta N:N INNER JOIN/IN se a categoria for null ou existir na lista
             "AND (LOWER(p.name) LIKE LOWER(CONCAT('%',:name,'%')) )") // concatena explicitamente o valor do like %
-    Page<Product> findProduct(Category category, String name, Pageable pageable);
+    Page<Product> findProduct(Long categoryId, String name, Pageable pageable);
 }
